@@ -1,0 +1,1318 @@
+[
+    {
+        "id": "f6beeceb2ff821a9",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3c8cb185736aff0b",
+        "type": "inject",
+        "z": "f6beeceb2ff821a9",
+        "d": true,
+        "name": "Inject random vital signs",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 420,
+        "wires": [
+            [
+                "8e48cf38aa41bbe2"
+            ]
+        ]
+    },
+    {
+        "id": "0a17a1ad24538ffb",
+        "type": "sqlite",
+        "z": "f6beeceb2ff821a9",
+        "d": true,
+        "mydb": "f4ecd786b14ff578",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Write to database",
+        "x": 510,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c9039caea2f9a521",
+        "type": "ui_table",
+        "z": "f6beeceb2ff821a9",
+        "group": "6c112b7973bdadcf",
+        "name": "Latest vital signs",
+        "order": 1,
+        "width": "9",
+        "height": "3",
+        "columns": [],
+        "outputs": 0,
+        "cts": false,
+        "x": 920,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "80ed99c91475bdad",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Bulid select function",
+        "func": "msg.topic = \"SELECT * from vital_signs_log ORDER BY 'timestamp' DESC LIMIT 0,5;\";\nmsg.database = \"/home/ji/Documents/vital_signs.db\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 700,
+        "wires": [
+            [
+                "65d96032345759ec"
+            ]
+        ]
+    },
+    {
+        "id": "65d96032345759ec",
+        "type": "queuedsqlite",
+        "z": "f6beeceb2ff821a9",
+        "mydb": "563fac2488f91284",
+        "sqlquery": "msg.topic",
+        "dbName": "msg.database",
+        "db": "",
+        "sql": "",
+        "name": "select from database",
+        "x": 680,
+        "y": 700,
+        "wires": [
+            [
+                "c9039caea2f9a521"
+            ]
+        ]
+    },
+    {
+        "id": "47216f73560a5064",
+        "type": "inject",
+        "z": "f6beeceb2ff821a9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 700,
+        "wires": [
+            [
+                "80ed99c91475bdad"
+            ]
+        ]
+    },
+    {
+        "id": "8e48cf38aa41bbe2",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Random vital signs",
+        "func": "msg.hr = 70+(Math.floor(Math.random() * 10));\nmsg.spo2 = 95+(Math.floor(Math.random()*5));\nmsg.bt = Math.round((36+(Math.random()))*100)/100;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 420,
+        "wires": [
+            [
+                "63b2b9cde16ab29a"
+            ]
+        ]
+    },
+    {
+        "id": "cf4e27d96e3e694e",
+        "type": "ui_chart",
+        "z": "f6beeceb2ff821a9",
+        "name": "Chart: Body temperature 1 h",
+        "group": "bc27e4439f9f9b1c",
+        "order": 3,
+        "width": "3",
+        "height": "3",
+        "label": "Body temperature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "35",
+        "ymax": "42",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#2ca02c",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 560,
+        "y": 1200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9593707815f738b9",
+        "type": "ui_text_input",
+        "z": "f6beeceb2ff821a9",
+        "name": "",
+        "label": "Device id",
+        "tooltip": "",
+        "group": "cff1fad903abe553",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 240,
+        "y": 1540,
+        "wires": [
+            [
+                "800ede9f6bcaf88b"
+            ]
+        ]
+    },
+    {
+        "id": "800ede9f6bcaf88b",
+        "type": "debug",
+        "z": "f6beeceb2ff821a9",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 1540,
+        "wires": []
+    },
+    {
+        "id": "63b2b9cde16ab29a",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Calculate AEWS",
+        "func": "let aews = 0;\n\nif (msg.spo2 >= 95) aews = aews;\nelse if (msg.spo2 >= 90 && msg.spo2 <= 94) aews = aews + 1;\nelse if (msg.spo >= 85 && msg.spo2 <= 89) aews = aews + 2;\nelse if (msg.spo2 <= 84) aews = aews + 3;\n\nif (msg.hr >= 51 && msg.hr <= 100) aews = aews;\nelse if (msg.hr >= 101 && msg.hr <= 110) aews = aews + 1;\nelse if (msg.hr >= 111 && msg.hr <= 129) aews = aews + 2;\nelse if (msg.hr >= 41 && msg.hr <= 50) aews = aews + 1;\nelse if (msg.hr <= 40) aews = aews + 2;\nelse if (msg.hr >= 130) aews = aews + 3;\n\nif (msg.bt >= 36.1 && msg.bt <= 37.3) aews = aews;\nelse if (msg.bt >= 37.4 && msg.bt <= 38.4) aews = aews + 1;\nelse if (msg.bt >= 35.1 && msg.bt <= 36.0) aews = aews + 1;\nelse if (msg.bt >= 38.5) aews = aews + 2;\nelse if (msg.bt <= 35) aews = aews + 2;\n\nmsg.aews = aews;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 360,
+        "wires": [
+            [
+                "2d5bd29219210afa",
+                "a4764cec26c452dd",
+                "3ff65bf90706a295"
+            ]
+        ]
+    },
+    {
+        "id": "2d5bd29219210afa",
+        "type": "debug",
+        "z": "f6beeceb2ff821a9",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "d10669ae52427508",
+        "type": "comment",
+        "z": "f6beeceb2ff821a9",
+        "name": "Acquiring vital signs",
+        "info": "",
+        "x": 170,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "5971b78530efbeb9",
+        "type": "link in",
+        "z": "f6beeceb2ff821a9",
+        "name": "Write vital signs to database",
+        "links": [
+            "a4764cec26c452dd"
+        ],
+        "x": 125,
+        "y": 560,
+        "wires": [
+            [
+                "ce7234c7d2d03a58"
+            ]
+        ]
+    },
+    {
+        "id": "3d1e6099953073ee",
+        "type": "comment",
+        "z": "f6beeceb2ff821a9",
+        "name": "Write vital signs to database",
+        "info": "",
+        "x": 200,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "ce7234c7d2d03a58",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Build insert function",
+        "func": "msg.topic = \"INSERT INTO 'vital_signs_log' ('timestamp','device_id','session_id','HR','BT','SpO2',AEWS) values (CURRENT_TIMESTAMP,'test-001',\"+String(msg.session_id)+\",\"+String(msg.hr)+\",\"+String(msg.bt)+\",\"+String(msg.spo2)+\", \"+String(msg.aews)+\");\";\nmsg.database = \"/home/ji/Documents/vital_signs.db\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 560,
+        "wires": [
+            [
+                "6be4a201d193fbbc",
+                "0a17a1ad24538ffb"
+            ]
+        ]
+    },
+    {
+        "id": "6be4a201d193fbbc",
+        "type": "queuedsqlite",
+        "z": "f6beeceb2ff821a9",
+        "mydb": "563fac2488f91284",
+        "sqlquery": "msg.topic",
+        "dbName": "msg.database",
+        "db": "",
+        "sql": "",
+        "name": "Write to database",
+        "x": 510,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a4764cec26c452dd",
+        "type": "link out",
+        "z": "f6beeceb2ff821a9",
+        "name": "Write vital signs to database",
+        "mode": "link",
+        "links": [
+            "5971b78530efbeb9"
+        ],
+        "x": 915,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "2edf531c42b6cf53",
+        "type": "comment",
+        "z": "f6beeceb2ff821a9",
+        "name": "Build dashboard",
+        "info": "",
+        "x": 160,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "378c0bf909f24530",
+        "type": "ui_chart",
+        "z": "f6beeceb2ff821a9",
+        "name": "Chart: Heart rate 1 h",
+        "group": "bc27e4439f9f9b1c",
+        "order": 1,
+        "width": "3",
+        "height": "3",
+        "label": "Heart rate last 1 h",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "20",
+        "ymax": "200",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#d62728",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#cc0000",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 540,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a5ce7ed097a31679",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Prepare HR",
+        "func": "msg.payload = msg.hr;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 860,
+        "wires": [
+            [
+                "378c0bf909f24530",
+                "953cf82960805b1d",
+                "dbceb403970bd0a8",
+                "38627e585e7f41c5"
+            ]
+        ]
+    },
+    {
+        "id": "aebffd98bc035b79",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Prepare BT",
+        "func": "msg.payload = msg.bt;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 1240,
+        "wires": [
+            [
+                "9cd9eed1d5113f0a",
+                "cf4e27d96e3e694e",
+                "5451cfef8c0843c8",
+                "6361ffc2715b8c05"
+            ]
+        ]
+    },
+    {
+        "id": "84da6baae13c0b71",
+        "type": "ui_chart",
+        "z": "f6beeceb2ff821a9",
+        "name": "Chart: SpO2 1 h",
+        "group": "bc27e4439f9f9b1c",
+        "order": 2,
+        "width": "3",
+        "height": "3",
+        "label": "SpO2",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "50",
+        "ymax": "100",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 520,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5c21f084f5fb23a4",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Prepare SpO2",
+        "func": "msg.payload = msg.spo2;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 1000,
+        "wires": [
+            [
+                "84da6baae13c0b71",
+                "cbe9aa25ccc1dcab",
+                "9dc397333a428b90",
+                "47d361a8f45ca0ee"
+            ]
+        ]
+    },
+    {
+        "id": "953cf82960805b1d",
+        "type": "ui_gauge",
+        "z": "f6beeceb2ff821a9",
+        "name": "Gauge: HR",
+        "group": "cff1fad903abe553",
+        "order": 5,
+        "width": "3",
+        "height": "2",
+        "gtype": "gage",
+        "title": "Heart rate",
+        "label": "/min",
+        "format": "{{value}}",
+        "min": "50",
+        "max": "150",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 510,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "9cd9eed1d5113f0a",
+        "type": "ui_gauge",
+        "z": "f6beeceb2ff821a9",
+        "name": "Gauge: BT",
+        "group": "cff1fad903abe553",
+        "order": 3,
+        "width": "3",
+        "height": "2",
+        "gtype": "gage",
+        "title": "Body temperature",
+        "label": "celsius",
+        "format": "{{value}}",
+        "min": "30",
+        "max": "42",
+        "colors": [
+            "#d62728",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 510,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "cbe9aa25ccc1dcab",
+        "type": "ui_gauge",
+        "z": "f6beeceb2ff821a9",
+        "name": "Gauge: SpO2",
+        "group": "cff1fad903abe553",
+        "order": 4,
+        "width": "3",
+        "height": "2",
+        "gtype": "gage",
+        "title": "SpO2",
+        "label": "celsius",
+        "format": "{{value}}",
+        "min": "70",
+        "max": "100",
+        "colors": [
+            "#d62728",
+            "#e6e600",
+            "#00b500"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 520,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "48f990a3dcd455ab",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Prepare AEWS",
+        "func": "msg.payload = msg.aews;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 1320,
+        "wires": [
+            [
+                "8b20d6fe5de25a66"
+            ]
+        ]
+    },
+    {
+        "id": "8b20d6fe5de25a66",
+        "type": "ui_gauge",
+        "z": "f6beeceb2ff821a9",
+        "name": "Gauge: AEWS",
+        "group": "cff1fad903abe553",
+        "order": 2,
+        "width": "9",
+        "height": "2",
+        "gtype": "gage",
+        "title": "AEWS",
+        "label": "celsius",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "8",
+        "colors": [
+            "#00b500",
+            "#f57900",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 520,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "a73ec45fa5e08cfc",
+        "type": "link in",
+        "z": "f6beeceb2ff821a9",
+        "name": "Build dashboard charts",
+        "links": [
+            "3ff65bf90706a295"
+        ],
+        "x": 135,
+        "y": 860,
+        "wires": [
+            [
+                "a5ce7ed097a31679",
+                "5c21f084f5fb23a4",
+                "aebffd98bc035b79",
+                "48f990a3dcd455ab"
+            ]
+        ]
+    },
+    {
+        "id": "3ff65bf90706a295",
+        "type": "link out",
+        "z": "f6beeceb2ff821a9",
+        "name": "Send to build charts",
+        "mode": "link",
+        "links": [
+            "a73ec45fa5e08cfc"
+        ],
+        "x": 915,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "7bebbccb9f851d10",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Get last hour average HR",
+        "func": "msg.topic = \"select round(((julianday(current_timestamp) - julianday(timestamp)) * 24) - 0.5) as hours_ago, avg(HR) as avg_hr from vital_signs_log group by hours_ago;\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 1440,
+        "wires": [
+            [
+                "fc1499537b3cda9a"
+            ]
+        ]
+    },
+    {
+        "id": "d785982aecb4cf66",
+        "type": "inject",
+        "z": "f6beeceb2ff821a9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 260,
+        "y": 1440,
+        "wires": [
+            [
+                "7bebbccb9f851d10"
+            ]
+        ]
+    },
+    {
+        "id": "fc1499537b3cda9a",
+        "type": "queuedsqlite",
+        "z": "f6beeceb2ff821a9",
+        "mydb": "563fac2488f91284",
+        "sqlquery": "msg.topic",
+        "dbName": "fixed",
+        "db": "/home/ji/Documents/vital_signs.db",
+        "sql": "",
+        "name": "Get average previous hour HR",
+        "x": 770,
+        "y": 1440,
+        "wires": [
+            [
+                "d9048cdb0fa1f92b"
+            ]
+        ]
+    },
+    {
+        "id": "d9048cdb0fa1f92b",
+        "type": "debug",
+        "z": "f6beeceb2ff821a9",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 1440,
+        "wires": []
+    },
+    {
+        "id": "dbceb403970bd0a8",
+        "type": "ui_chart",
+        "z": "f6beeceb2ff821a9",
+        "name": "Chart: Heart rate 6 h",
+        "group": "7dd57dd1217913b9",
+        "order": 1,
+        "width": "3",
+        "height": "3",
+        "label": "Heart rate last 6 h",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "20",
+        "ymax": "200",
+        "removeOlder": "6",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#d62728",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#cc0000",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 540,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "38627e585e7f41c5",
+        "type": "ui_chart",
+        "z": "f6beeceb2ff821a9",
+        "name": "Chart: Heart rate 15 min",
+        "group": "1aa8b2e09ac501dc",
+        "order": 1,
+        "width": "3",
+        "height": "3",
+        "label": "Heart rate",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "20",
+        "ymax": "200",
+        "removeOlder": "15",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#d62728",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#cc0000",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 550,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "47d361a8f45ca0ee",
+        "type": "ui_chart",
+        "z": "f6beeceb2ff821a9",
+        "name": "Chart: SpO2 6 h",
+        "group": "7dd57dd1217913b9",
+        "order": 2,
+        "width": "3",
+        "height": "3",
+        "label": "SpO2",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "50",
+        "ymax": "100",
+        "removeOlder": "6",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 520,
+        "y": 1040,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9dc397333a428b90",
+        "type": "ui_chart",
+        "z": "f6beeceb2ff821a9",
+        "name": "Chart: SpO2 15 min",
+        "group": "1aa8b2e09ac501dc",
+        "order": 2,
+        "width": "3",
+        "height": "3",
+        "label": "SpO2",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "50",
+        "ymax": "100",
+        "removeOlder": "15",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 540,
+        "y": 960,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6361ffc2715b8c05",
+        "type": "ui_chart",
+        "z": "f6beeceb2ff821a9",
+        "name": "Chart: Body temperature 6 h",
+        "group": "7dd57dd1217913b9",
+        "order": 3,
+        "width": "3",
+        "height": "3",
+        "label": "Body temperature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "35",
+        "ymax": "42",
+        "removeOlder": "6",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#2ca02c",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 560,
+        "y": 1240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5451cfef8c0843c8",
+        "type": "ui_chart",
+        "z": "f6beeceb2ff821a9",
+        "name": "Chart: Body temperature 15 min",
+        "group": "1aa8b2e09ac501dc",
+        "order": 3,
+        "width": "3",
+        "height": "3",
+        "label": "Body temperature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "35",
+        "ymax": "42",
+        "removeOlder": "15",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#2ca02c",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 570,
+        "y": 1160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "085571d80afdfdf9",
+        "type": "comment",
+        "z": "f6beeceb2ff821a9",
+        "name": "Get hourly average",
+        "info": "",
+        "x": 210,
+        "y": 1380,
+        "wires": []
+    },
+    {
+        "id": "d03df986a9f85ed8",
+        "type": "comment",
+        "z": "f6beeceb2ff821a9",
+        "name": "Device id",
+        "info": "",
+        "x": 180,
+        "y": 1500,
+        "wires": []
+    },
+    {
+        "id": "b7c78ac95a49d41d",
+        "type": "mqtt in",
+        "z": "f6beeceb2ff821a9",
+        "name": "",
+        "topic": "iot/tracker-001/#",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "cd02ebd2bff24819",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 240,
+        "y": 120,
+        "wires": [
+            [
+                "edc58030ab1d4722"
+            ]
+        ]
+    },
+    {
+        "id": "b932fa6a267b97b7",
+        "type": "comment",
+        "z": "f6beeceb2ff821a9",
+        "name": "Getting data from tracker",
+        "info": "",
+        "x": 190,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "edc58030ab1d4722",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Get device and session id",
+        "func": "msg.device_id = msg.topic.split(\"/\")[1];\nmsg.session_id = msg.topic.split(\"/\")[2];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 120,
+        "wires": [
+            [
+                "774d9429ee708e92"
+            ]
+        ]
+    },
+    {
+        "id": "b7704c3c3e6151f5",
+        "type": "debug",
+        "z": "f6beeceb2ff821a9",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "774d9429ee708e92",
+        "type": "json",
+        "z": "f6beeceb2ff821a9",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": true,
+        "x": 750,
+        "y": 120,
+        "wires": [
+            [
+                "b967235d74f7eb01"
+            ]
+        ]
+    },
+    {
+        "id": "2bcdddeb6618ba8d",
+        "type": "inject",
+        "z": "f6beeceb2ff821a9",
+        "name": "vital signs example",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "iot/tracker-001/8",
+        "payload": "{    \"device_id\":\"tracker-001\",    \"session_id\":8,    \"hr\":70,    \"spo2\":96,    \"bt\":36.5 }",
+        "payloadType": "str",
+        "x": 250,
+        "y": 200,
+        "wires": [
+            [
+                "edc58030ab1d4722"
+            ]
+        ]
+    },
+    {
+        "id": "b967235d74f7eb01",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Extract vital signs",
+        "func": "msg.hr = msg.payload.hr;\nmsg.spo2 = msg.payload.spo2;\nmsg.bt = msg.payload.bt;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 120,
+        "wires": [
+            [
+                "b7704c3c3e6151f5",
+                "2870fd4f3b11ae5e"
+            ]
+        ]
+    },
+    {
+        "id": "2870fd4f3b11ae5e",
+        "type": "link out",
+        "z": "f6beeceb2ff821a9",
+        "name": "Process vital signs",
+        "mode": "link",
+        "links": [
+            "58620c586de6d1ad"
+        ],
+        "x": 1135,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "58620c586de6d1ad",
+        "type": "link in",
+        "z": "f6beeceb2ff821a9",
+        "name": "Process vital signs",
+        "links": [
+            "2870fd4f3b11ae5e"
+        ],
+        "x": 115,
+        "y": 360,
+        "wires": [
+            [
+                "63b2b9cde16ab29a"
+            ]
+        ]
+    },
+    {
+        "id": "f4ecd786b14ff578",
+        "type": "sqlitedb",
+        "db": "/home/ji/Documents/vital_signs.db",
+        "mode": "RWC"
+    },
+    {
+        "id": "6c112b7973bdadcf",
+        "type": "ui_group",
+        "name": "Vital signs table",
+        "tab": "1a08348d976afc3f",
+        "order": 6,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "563fac2488f91284",
+        "type": "sqliteQueuedDb",
+        "db": "/home/ji/Documents/vital_signs.db",
+        "mode": "RWC"
+    },
+    {
+        "id": "bc27e4439f9f9b1c",
+        "type": "ui_group",
+        "name": "last 1 h",
+        "tab": "1a08348d976afc3f",
+        "order": 4,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "cff1fad903abe553",
+        "type": "ui_group",
+        "name": "Latest",
+        "tab": "1a08348d976afc3f",
+        "order": 1,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7dd57dd1217913b9",
+        "type": "ui_group",
+        "name": "last 6 h",
+        "tab": "1a08348d976afc3f",
+        "order": 5,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1aa8b2e09ac501dc",
+        "type": "ui_group",
+        "name": "last 15 mins",
+        "tab": "1a08348d976afc3f",
+        "order": 3,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "cd02ebd2bff24819",
+        "type": "mqtt-broker",
+        "name": "Local MQTT broker",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "1a08348d976afc3f",
+        "type": "ui_tab",
+        "name": "Vital signs tracker",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
