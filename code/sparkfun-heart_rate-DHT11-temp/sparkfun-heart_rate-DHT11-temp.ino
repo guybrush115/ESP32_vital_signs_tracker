@@ -88,6 +88,9 @@ void setup(){
 
   dht.begin();
   Serial.println("Start DHT11...");
+
+  int session_id = rand();
+  
 }
 
 void loop(){

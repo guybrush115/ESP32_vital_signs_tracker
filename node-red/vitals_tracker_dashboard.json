@@ -29,8 +29,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 210,
-        "y": 420,
+        "x": 250,
+        "y": 680,
         "wires": [
             [
                 "8e48cf38aa41bbe2"
@@ -46,8 +46,8 @@
         "sqlquery": "msg.topic",
         "sql": "",
         "name": "Write to database",
-        "x": 510,
-        "y": 500,
+        "x": 550,
+        "y": 760,
         "wires": [
             []
         ]
@@ -64,8 +64,8 @@
         "columns": [],
         "outputs": 0,
         "cts": false,
-        "x": 920,
-        "y": 700,
+        "x": 960,
+        "y": 960,
         "wires": []
     },
     {
@@ -73,17 +73,18 @@
         "type": "function",
         "z": "f6beeceb2ff821a9",
         "name": "Bulid select function",
-        "func": "msg.topic = \"SELECT * from vital_signs_log ORDER BY 'timestamp' DESC LIMIT 0,5;\";\nmsg.database = \"/home/ji/Documents/vital_signs.db\";\nreturn msg;",
+        "func": "let session_id = global.get(\"session_id\");\nlet device_id = global.get(\"device_id\");\nmsg.topic = \"SELECT timestamp,HR,SpO2,BT,AEWS from vital_signs_log where session_id=\"+String(session_id)+\" AND device_id like '\"+String(device_id)+\"' ORDER BY timestamp DESC LIMIT 0,5;\";\nmsg.database = \"/home/ji/Documents/vital_signs.db\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 420,
-        "y": 700,
+        "x": 460,
+        "y": 960,
         "wires": [
             [
-                "65d96032345759ec"
+                "65d96032345759ec",
+                "aa21e19f3e26eb08"
             ]
         ]
     },
@@ -97,8 +98,8 @@
         "db": "",
         "sql": "",
         "name": "select from database",
-        "x": 680,
-        "y": 700,
+        "x": 720,
+        "y": 960,
         "wires": [
             [
                 "c9039caea2f9a521"
@@ -126,8 +127,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 210,
-        "y": 700,
+        "x": 250,
+        "y": 960,
         "wires": [
             [
                 "80ed99c91475bdad"
@@ -145,8 +146,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 470,
-        "y": 420,
+        "x": 510,
+        "y": 680,
         "wires": [
             [
                 "63b2b9cde16ab29a"
@@ -191,8 +192,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 560,
-        "y": 1200,
+        "x": 600,
+        "y": 1460,
         "wires": [
             []
         ]
@@ -201,11 +202,12 @@
         "id": "9593707815f738b9",
         "type": "ui_text_input",
         "z": "f6beeceb2ff821a9",
+        "d": true,
         "name": "",
         "label": "Device id",
         "tooltip": "",
         "group": "cff1fad903abe553",
-        "order": 1,
+        "order": 2,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -215,8 +217,8 @@
         "sendOnBlur": true,
         "className": "",
         "topicType": "msg",
-        "x": 240,
-        "y": 1540,
+        "x": 280,
+        "y": 1960,
         "wires": [
             [
                 "800ede9f6bcaf88b"
@@ -235,8 +237,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 400,
-        "y": 1540,
+        "x": 440,
+        "y": 1960,
         "wires": []
     },
     {
@@ -250,8 +252,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 780,
-        "y": 360,
+        "x": 820,
+        "y": 620,
         "wires": [
             [
                 "2d5bd29219210afa",
@@ -273,8 +275,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 960,
-        "y": 300,
+        "x": 1000,
+        "y": 560,
         "wires": []
     },
     {
@@ -283,8 +285,8 @@
         "z": "f6beeceb2ff821a9",
         "name": "Acquiring vital signs",
         "info": "",
-        "x": 170,
-        "y": 300,
+        "x": 210,
+        "y": 560,
         "wires": []
     },
     {
@@ -295,8 +297,8 @@
         "links": [
             "a4764cec26c452dd"
         ],
-        "x": 125,
-        "y": 560,
+        "x": 165,
+        "y": 820,
         "wires": [
             [
                 "ce7234c7d2d03a58"
@@ -309,8 +311,8 @@
         "z": "f6beeceb2ff821a9",
         "name": "Write vital signs to database",
         "info": "",
-        "x": 200,
-        "y": 500,
+        "x": 240,
+        "y": 760,
         "wires": []
     },
     {
@@ -318,14 +320,14 @@
         "type": "function",
         "z": "f6beeceb2ff821a9",
         "name": "Build insert function",
-        "func": "msg.topic = \"INSERT INTO 'vital_signs_log' ('timestamp','device_id','session_id','HR','BT','SpO2',AEWS) values (CURRENT_TIMESTAMP,'test-001',\"+String(msg.session_id)+\",\"+String(msg.hr)+\",\"+String(msg.bt)+\",\"+String(msg.spo2)+\", \"+String(msg.aews)+\");\";\nmsg.database = \"/home/ji/Documents/vital_signs.db\";\nreturn msg;",
+        "func": "msg.topic = \"INSERT INTO 'vital_signs_log' ('timestamp','device_id','session_id','HR','BT','SpO2',AEWS) values (CURRENT_TIMESTAMP,'\"+String(msg.device_id)+\"',\"+String(msg.session_id)+\",\"+String(msg.hr)+\",\"+String(msg.bt)+\",\"+String(msg.spo2)+\", \"+String(msg.aews)+\");\";\nmsg.database = \"/home/ji/Documents/vital_signs.db\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 290,
-        "y": 560,
+        "x": 330,
+        "y": 820,
         "wires": [
             [
                 "6be4a201d193fbbc",
@@ -343,8 +345,8 @@
         "db": "",
         "sql": "",
         "name": "Write to database",
-        "x": 510,
-        "y": 560,
+        "x": 550,
+        "y": 820,
         "wires": [
             []
         ]
@@ -358,8 +360,8 @@
         "links": [
             "5971b78530efbeb9"
         ],
-        "x": 915,
-        "y": 360,
+        "x": 955,
+        "y": 620,
         "wires": []
     },
     {
@@ -368,8 +370,8 @@
         "z": "f6beeceb2ff821a9",
         "name": "Build dashboard",
         "info": "",
-        "x": 160,
-        "y": 640,
+        "x": 200,
+        "y": 900,
         "wires": []
     },
     {
@@ -410,8 +412,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 540,
-        "y": 820,
+        "x": 580,
+        "y": 1080,
         "wires": [
             []
         ]
@@ -427,8 +429,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 290,
-        "y": 860,
+        "x": 330,
+        "y": 1120,
         "wires": [
             [
                 "378c0bf909f24530",
@@ -449,8 +451,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 290,
-        "y": 1240,
+        "x": 330,
+        "y": 1500,
         "wires": [
             [
                 "9cd9eed1d5113f0a",
@@ -498,8 +500,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 520,
-        "y": 1000,
+        "x": 560,
+        "y": 1260,
         "wires": [
             []
         ]
@@ -515,8 +517,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
-        "y": 1000,
+        "x": 340,
+        "y": 1260,
         "wires": [
             [
                 "84da6baae13c0b71",
@@ -532,7 +534,7 @@
         "z": "f6beeceb2ff821a9",
         "name": "Gauge: HR",
         "group": "cff1fad903abe553",
-        "order": 5,
+        "order": 6,
         "width": "3",
         "height": "2",
         "gtype": "gage",
@@ -549,8 +551,8 @@
         "seg1": "",
         "seg2": "",
         "className": "",
-        "x": 510,
-        "y": 900,
+        "x": 550,
+        "y": 1160,
         "wires": []
     },
     {
@@ -559,7 +561,7 @@
         "z": "f6beeceb2ff821a9",
         "name": "Gauge: BT",
         "group": "cff1fad903abe553",
-        "order": 3,
+        "order": 4,
         "width": "3",
         "height": "2",
         "gtype": "gage",
@@ -576,8 +578,8 @@
         "seg1": "",
         "seg2": "",
         "className": "",
-        "x": 510,
-        "y": 1280,
+        "x": 550,
+        "y": 1540,
         "wires": []
     },
     {
@@ -586,7 +588,7 @@
         "z": "f6beeceb2ff821a9",
         "name": "Gauge: SpO2",
         "group": "cff1fad903abe553",
-        "order": 4,
+        "order": 5,
         "width": "3",
         "height": "2",
         "gtype": "gage",
@@ -603,8 +605,8 @@
         "seg1": "",
         "seg2": "",
         "className": "",
-        "x": 520,
-        "y": 1080,
+        "x": 560,
+        "y": 1340,
         "wires": []
     },
     {
@@ -618,11 +620,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
-        "y": 1320,
+        "x": 340,
+        "y": 1580,
         "wires": [
             [
-                "8b20d6fe5de25a66"
+                "8b20d6fe5de25a66",
+                "129d5880899d9643"
             ]
         ]
     },
@@ -632,7 +635,7 @@
         "z": "f6beeceb2ff821a9",
         "name": "Gauge: AEWS",
         "group": "cff1fad903abe553",
-        "order": 2,
+        "order": 3,
         "width": "9",
         "height": "2",
         "gtype": "gage",
@@ -649,8 +652,8 @@
         "seg1": "",
         "seg2": "",
         "className": "",
-        "x": 520,
-        "y": 1320,
+        "x": 560,
+        "y": 1580,
         "wires": []
     },
     {
@@ -661,8 +664,8 @@
         "links": [
             "3ff65bf90706a295"
         ],
-        "x": 135,
-        "y": 860,
+        "x": 175,
+        "y": 1120,
         "wires": [
             [
                 "a5ce7ed097a31679",
@@ -681,8 +684,8 @@
         "links": [
             "a73ec45fa5e08cfc"
         ],
-        "x": 915,
-        "y": 400,
+        "x": 955,
+        "y": 660,
         "wires": []
     },
     {
@@ -696,8 +699,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 470,
-        "y": 1440,
+        "x": 510,
+        "y": 1860,
         "wires": [
             [
                 "fc1499537b3cda9a"
@@ -725,8 +728,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 260,
-        "y": 1440,
+        "x": 300,
+        "y": 1860,
         "wires": [
             [
                 "7bebbccb9f851d10"
@@ -743,8 +746,8 @@
         "db": "/home/ji/Documents/vital_signs.db",
         "sql": "",
         "name": "Get average previous hour HR",
-        "x": 770,
-        "y": 1440,
+        "x": 810,
+        "y": 1860,
         "wires": [
             [
                 "d9048cdb0fa1f92b"
@@ -763,8 +766,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1040,
-        "y": 1440,
+        "x": 1080,
+        "y": 1860,
         "wires": []
     },
     {
@@ -805,8 +808,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 540,
-        "y": 860,
+        "x": 580,
+        "y": 1120,
         "wires": [
             []
         ]
@@ -849,8 +852,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 550,
-        "y": 780,
+        "x": 590,
+        "y": 1040,
         "wires": [
             []
         ]
@@ -893,8 +896,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 520,
-        "y": 1040,
+        "x": 560,
+        "y": 1300,
         "wires": [
             []
         ]
@@ -937,8 +940,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 540,
-        "y": 960,
+        "x": 580,
+        "y": 1220,
         "wires": [
             []
         ]
@@ -981,8 +984,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 560,
-        "y": 1240,
+        "x": 600,
+        "y": 1500,
         "wires": [
             []
         ]
@@ -1025,8 +1028,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 570,
-        "y": 1160,
+        "x": 610,
+        "y": 1420,
         "wires": [
             []
         ]
@@ -1037,8 +1040,8 @@
         "z": "f6beeceb2ff821a9",
         "name": "Get hourly average",
         "info": "",
-        "x": 210,
-        "y": 1380,
+        "x": 250,
+        "y": 1800,
         "wires": []
     },
     {
@@ -1047,8 +1050,8 @@
         "z": "f6beeceb2ff821a9",
         "name": "Device id",
         "info": "",
-        "x": 180,
-        "y": 1500,
+        "x": 220,
+        "y": 1920,
         "wires": []
     },
     {
@@ -1064,8 +1067,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 240,
-        "y": 120,
+        "x": 280,
+        "y": 380,
         "wires": [
             [
                 "edc58030ab1d4722"
@@ -1078,8 +1081,8 @@
         "z": "f6beeceb2ff821a9",
         "name": "Getting data from tracker",
         "info": "",
-        "x": 190,
-        "y": 60,
+        "x": 230,
+        "y": 320,
         "wires": []
     },
     {
@@ -1093,11 +1096,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 510,
-        "y": 120,
+        "x": 550,
+        "y": 380,
         "wires": [
             [
-                "774d9429ee708e92"
+                "774d9429ee708e92",
+                "b5dab99b574d2e23"
             ]
         ]
     },
@@ -1114,8 +1118,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1180,
-        "y": 200,
+        "x": 1220,
+        "y": 460,
         "wires": []
     },
     {
@@ -1126,8 +1130,8 @@
         "property": "payload",
         "action": "obj",
         "pretty": true,
-        "x": 750,
-        "y": 120,
+        "x": 790,
+        "y": 380,
         "wires": [
             [
                 "b967235d74f7eb01"
@@ -1155,8 +1159,8 @@
         "topic": "iot/tracker-001/8",
         "payload": "{    \"device_id\":\"tracker-001\",    \"session_id\":8,    \"hr\":70,    \"spo2\":96,    \"bt\":36.5 }",
         "payloadType": "str",
-        "x": 250,
-        "y": 200,
+        "x": 290,
+        "y": 440,
         "wires": [
             [
                 "edc58030ab1d4722"
@@ -1174,8 +1178,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 970,
-        "y": 120,
+        "x": 1010,
+        "y": 380,
         "wires": [
             [
                 "b7704c3c3e6151f5",
@@ -1192,8 +1196,8 @@
         "links": [
             "58620c586de6d1ad"
         ],
-        "x": 1135,
-        "y": 120,
+        "x": 1175,
+        "y": 380,
         "wires": []
     },
     {
@@ -1204,11 +1208,198 @@
         "links": [
             "2870fd4f3b11ae5e"
         ],
-        "x": 115,
-        "y": 360,
+        "x": 155,
+        "y": 620,
         "wires": [
             [
                 "63b2b9cde16ab29a"
+            ]
+        ]
+    },
+    {
+        "id": "d14b4dd31717f713",
+        "type": "ui_audio",
+        "z": "f6beeceb2ff821a9",
+        "name": "Abnormal AEWS warning",
+        "group": "cff1fad903abe553",
+        "voice": "urn:moz-tts:speechd:English%20(America)?en",
+        "always": "",
+        "x": 1210,
+        "y": 1620,
+        "wires": []
+    },
+    {
+        "id": "129d5880899d9643",
+        "type": "switch",
+        "z": "f6beeceb2ff821a9",
+        "d": true,
+        "name": "?Abnormal AEWS?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gte",
+                "v": "2",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 570,
+        "y": 1620,
+        "wires": [
+            [
+                "4f33934170f69405"
+            ]
+        ]
+    },
+    {
+        "id": "4f33934170f69405",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Create abnormal AEWS warning message",
+        "func": "msg.payload = \"Abnormal Early warning score\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 1620,
+        "wires": [
+            [
+                "d14b4dd31717f713"
+            ]
+        ]
+    },
+    {
+        "id": "a6f1982cf33733cf",
+        "type": "inject",
+        "z": "f6beeceb2ff821a9",
+        "name": "Abnormal vital signs example",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "iot/tracker-001/8",
+        "payload": "{    \"device_id\":\"tracker-001\",    \"session_id\":8,    \"hr\":140,    \"spo2\":91,    \"bt\":39.5 }",
+        "payloadType": "str",
+        "x": 320,
+        "y": 500,
+        "wires": [
+            [
+                "edc58030ab1d4722"
+            ]
+        ]
+    },
+    {
+        "id": "1e57a73c73b7ae5b",
+        "type": "comment",
+        "z": "f6beeceb2ff821a9",
+        "name": "Device initiation (Power on)",
+        "info": "Initiate device when power on for the first time",
+        "x": 230,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "8e9465d1918346b3",
+        "type": "mqtt in",
+        "z": "f6beeceb2ff821a9",
+        "name": "Subscribe to device registration channel",
+        "topic": "iot/register/tracker-001",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "cd02ebd2bff24819",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 270,
+        "y": 100,
+        "wires": [
+            [
+                "fc868f157308fa0f"
+            ]
+        ]
+    },
+    {
+        "id": "fc868f157308fa0f",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Set session_id",
+        "func": "msg.session_id = msg.payload;\nglobal.set(\"session_id\",msg.payload);\nglobal.set(\"device_id\",\"tracker-001\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aa21e19f3e26eb08",
+        "type": "debug",
+        "z": "f6beeceb2ff821a9",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "topic",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "4f6274e37cc50b5c",
+        "type": "ui_text",
+        "z": "f6beeceb2ff821a9",
+        "group": "cff1fad903abe553",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Device id:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 1000,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "b5dab99b574d2e23",
+        "type": "function",
+        "z": "f6beeceb2ff821a9",
+        "name": "Device id text",
+        "func": "msg.payload = String(msg.device_id)+\"-\"+String(msg.session_id);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 440,
+        "wires": [
+            [
+                "4f6274e37cc50b5c"
             ]
         ]
     },

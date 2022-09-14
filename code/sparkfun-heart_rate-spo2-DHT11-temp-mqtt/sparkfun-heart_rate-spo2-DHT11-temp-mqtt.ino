@@ -122,6 +122,12 @@ void setup(){
   Serial.println("Setting up MQTT server...");
   mqttClient.setServer(mqttServer, mqttPort);
 
+  Serial.println("Initiate session...");
+  session_id = random(0,10000000);
+  Serial.print("Publishing session_id: ");
+  Serial.println(session_id);
+  mqtt_publish(("iot/register/"+device_id),String(session_id));
+
   delay(4000); 
 
 }
@@ -162,14 +168,14 @@ void loop(){
     if (body.confidence >=90 && body.heartRate && body.oxygen) {
       text = "Heart rate: "+String(body.heartRate)+"\nOxygen: "+String(body.oxygen)+"\nTemp: "+String(bt);
       display_text(text);
-      mqtt_pub(session_id,body.heartRate,body.oxygen,bt);
+      mqtt_publish_vital_signs(session_id,body.heartRate,body.oxygen,bt);
     }
     else display_text("Waiting for data");
     
     // *************** Send vital signs data to MQTT broker *************
     
 
-    delay(10000); // Slowing it down, we don't need to break our necks here.
+    delay(5000); // Slowing it down, we don't need to break our necks here.
 }
 
 void display_text(String text) {
@@ -181,15 +187,21 @@ void display_text(String text) {
   display.display();
 }
 
-void mqtt_pub(int session_id,int hr,int spo2, float bt) {
+void mqtt_publish_vital_signs(int session_id,int hr,int spo2, float bt) {
     String vital_signs;
+    String topic;
 
+    topic = ("iot/"+device_id+"/"+String(session_id));
     vital_signs = "{\"device_id\": \""+device_id+"\",\"session_id\": "+String(session_id)+",\"hr\": "+String(hr)+",\"spo2\": "+String(spo2)+",\"bt\":"+String(bt,2)+"}";
+
+    mqtt_publish(topic,vital_signs);
+}
+
+void mqtt_publish(String topic,String payload) {
     while (!mqttClient.connected()) {
       Serial.println("Connecting to MQTT server...");
       mqttClient.connect(device_id.c_str(),mqttUser,mqttPassword);
     }
-    if (mqttClient.publish(("iot/"+device_id+"/8").c_str(),vital_signs.c_str())) 
+    if (mqttClient.publish(topic.c_str(),payload.c_str())) 
       Serial.println("MQTT published.");
-    
 }
