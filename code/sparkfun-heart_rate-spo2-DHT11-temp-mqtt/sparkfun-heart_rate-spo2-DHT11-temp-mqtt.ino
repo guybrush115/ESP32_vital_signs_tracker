@@ -23,7 +23,8 @@ bioData body;
 
 // *****
 
-// *****
+// ***** Config DHT11 humidity temperature sensor
+
 #define DHTPIN 13     // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT11   // DHT 11
 DHT dht(DHTPIN, DHTTYPE);
@@ -57,7 +58,7 @@ PubSubClient mqttClient(wificlient);
 // *****
 
 // ***** config session id
-int session_id = 8;
+int session_id;
 
 void setup(){
 
@@ -123,9 +124,12 @@ void setup(){
   mqttClient.setServer(mqttServer, mqttPort);
 
   Serial.println("Initiate session...");
+
+  // *********** Generate session_id everytime the device started
   session_id = random(0,10000000);
   Serial.print("Publishing session_id: ");
   Serial.println(session_id);
+  // *********** Send latest session_id to MQTT broker
   mqtt_publish(("iot/register/"+device_id),String(session_id));
 
   delay(4000); 
@@ -138,7 +142,7 @@ void loop(){
     float bt;
     int hr, spo2, confidence;
 
-    // ****** Get temperature
+    // ****** Get temperature from DHT11
     bt = dht.readTemperature();
     bt = bt+2.5; // Correct skin temp -> core temp
 
@@ -153,15 +157,10 @@ void loop(){
     
     Serial.print("Heartrate: ");
     Serial.print(body.heartRate); 
-//    Serial.print(",");/
     Serial.print(", Oxygen: ");
     Serial.print(body.oxygen); 
     Serial.print(", Confidence: ");
     Serial.println(body.confidence); 
-
-//    Serial.print(", Status: ");
-//    Serial.println(body.status);
-
 
     // *************** Output to OLED *************
     
