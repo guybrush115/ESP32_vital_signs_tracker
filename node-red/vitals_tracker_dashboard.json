@@ -2,7 +2,7 @@
     {
         "id": "f6beeceb2ff821a9",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "Vital signs tracker",
         "disabled": false,
         "info": "",
         "env": []
@@ -38,21 +38,6 @@
         ]
     },
     {
-        "id": "0a17a1ad24538ffb",
-        "type": "sqlite",
-        "z": "f6beeceb2ff821a9",
-        "d": true,
-        "mydb": "f4ecd786b14ff578",
-        "sqlquery": "msg.topic",
-        "sql": "",
-        "name": "Write to database",
-        "x": 550,
-        "y": 760,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "c9039caea2f9a521",
         "type": "ui_table",
         "z": "f6beeceb2ff821a9",
@@ -73,7 +58,7 @@
         "type": "function",
         "z": "f6beeceb2ff821a9",
         "name": "Bulid select function",
-        "func": "let session_id = global.get(\"session_id\");\nlet device_id = global.get(\"device_id\");\nmsg.topic = \"SELECT timestamp,HR,SpO2,BT,AEWS from vital_signs_log where session_id=\"+String(session_id)+\" AND device_id like '\"+String(device_id)+\"' ORDER BY timestamp DESC LIMIT 0,5;\";\nmsg.database = \"/home/ji/Documents/vital_signs.db\";\nreturn msg;",
+        "func": "let session_id = global.get(\"session_id\");\nlet device_id = global.get(\"device_id\");\nmsg.topic = \"SELECT timestamp,HR,SpO2,BT,AEWS from vital_signs_log where session_id=\"+String(session_id)+\" AND device_id like '\"+String(device_id)+\"' ORDER BY timestamp DESC LIMIT 0,5;\";\nmsg.database = \"/home/ji_aiot_2022/Documents/vital_signs.db\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -85,24 +70,6 @@
             [
                 "65d96032345759ec",
                 "aa21e19f3e26eb08"
-            ]
-        ]
-    },
-    {
-        "id": "65d96032345759ec",
-        "type": "queuedsqlite",
-        "z": "f6beeceb2ff821a9",
-        "mydb": "563fac2488f91284",
-        "sqlquery": "msg.topic",
-        "dbName": "msg.database",
-        "db": "",
-        "sql": "",
-        "name": "select from database",
-        "x": 720,
-        "y": 960,
-        "wires": [
-            [
-                "c9039caea2f9a521"
             ]
         ]
     },
@@ -320,7 +287,7 @@
         "type": "function",
         "z": "f6beeceb2ff821a9",
         "name": "Build insert function",
-        "func": "msg.topic = \"INSERT INTO 'vital_signs_log' ('timestamp','device_id','session_id','HR','BT','SpO2',AEWS) values (CURRENT_TIMESTAMP,'\"+String(msg.device_id)+\"',\"+String(msg.session_id)+\",\"+String(msg.hr)+\",\"+String(msg.bt)+\",\"+String(msg.spo2)+\", \"+String(msg.aews)+\");\";\nmsg.database = \"/home/ji/Documents/vital_signs.db\";\nreturn msg;",
+        "func": "msg.topic = \"INSERT INTO 'vital_signs_log' ('timestamp','device_id','session_id','HR','BT','SpO2',AEWS) values (CURRENT_TIMESTAMP,'\"+String(msg.device_id)+\"',\"+String(msg.session_id)+\",\"+String(msg.hr)+\",\"+String(msg.bt)+\",\"+String(msg.spo2)+\", \"+String(msg.aews)+\");\";\nmsg.database = \"/home/ji_aiot_2022/Documents/vital_signs.db\";\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -333,22 +300,6 @@
                 "6be4a201d193fbbc",
                 "0a17a1ad24538ffb"
             ]
-        ]
-    },
-    {
-        "id": "6be4a201d193fbbc",
-        "type": "queuedsqlite",
-        "z": "f6beeceb2ff821a9",
-        "mydb": "563fac2488f91284",
-        "sqlquery": "msg.topic",
-        "dbName": "msg.database",
-        "db": "",
-        "sql": "",
-        "name": "Write to database",
-        "x": 550,
-        "y": 820,
-        "wires": [
-            []
         ]
     },
     {
@@ -733,24 +684,6 @@
         "wires": [
             [
                 "7bebbccb9f851d10"
-            ]
-        ]
-    },
-    {
-        "id": "fc1499537b3cda9a",
-        "type": "queuedsqlite",
-        "z": "f6beeceb2ff821a9",
-        "mydb": "563fac2488f91284",
-        "sqlquery": "msg.topic",
-        "dbName": "fixed",
-        "db": "/home/ji/Documents/vital_signs.db",
-        "sql": "",
-        "name": "Get average previous hour HR",
-        "x": 810,
-        "y": 1860,
-        "wires": [
-            [
-                "d9048cdb0fa1f92b"
             ]
         ]
     },
@@ -1404,10 +1337,111 @@
         ]
     },
     {
-        "id": "f4ecd786b14ff578",
-        "type": "sqlitedb",
+        "id": "65d96032345759ec",
+        "type": "queuedsqlite",
+        "z": "f6beeceb2ff821a9",
+        "mydb": "563fac2488f91284",
+        "sqlquery": "msg.topic",
+        "dbName": "msg.database",
+        "db": "",
+        "sql": "",
+        "name": "select from database",
+        "x": 720,
+        "y": 960,
+        "wires": [
+            [
+                "c9039caea2f9a521"
+            ]
+        ]
+    },
+    {
+        "id": "6be4a201d193fbbc",
+        "type": "queuedsqlite",
+        "z": "f6beeceb2ff821a9",
+        "mydb": "563fac2488f91284",
+        "sqlquery": "msg.topic",
+        "dbName": "msg.database",
+        "db": "",
+        "sql": "",
+        "name": "Write to database",
+        "x": 550,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fc1499537b3cda9a",
+        "type": "queuedsqlite",
+        "z": "f6beeceb2ff821a9",
+        "mydb": "563fac2488f91284",
+        "sqlquery": "msg.topic",
+        "dbName": "fixed",
         "db": "/home/ji/Documents/vital_signs.db",
-        "mode": "RWC"
+        "sql": "",
+        "name": "Get average previous hour HR",
+        "x": 810,
+        "y": 1860,
+        "wires": [
+            [
+                "d9048cdb0fa1f92b"
+            ]
+        ]
+    },
+    {
+        "id": "0a17a1ad24538ffb",
+        "type": "sqlite",
+        "z": "f6beeceb2ff821a9",
+        "d": true,
+        "mydb": "f4ecd786b14ff578",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Write to database",
+        "x": 550,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9b17f47f7690fa20",
+        "type": "ui_button",
+        "z": "f6beeceb2ff821a9",
+        "name": "",
+        "group": "cff1fad903abe553",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Clear chart",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 330,
+        "y": 1040,
+        "wires": [
+            [
+                "38627e585e7f41c5",
+                "378c0bf909f24530",
+                "dbceb403970bd0a8",
+                "953cf82960805b1d",
+                "9dc397333a428b90",
+                "84da6baae13c0b71",
+                "47d361a8f45ca0ee",
+                "cbe9aa25ccc1dcab",
+                "5451cfef8c0843c8",
+                "cf4e27d96e3e694e",
+                "6361ffc2715b8c05",
+                "9cd9eed1d5113f0a",
+                "8b20d6fe5de25a66"
+            ]
+        ]
     },
     {
         "id": "6c112b7973bdadcf",
@@ -1419,12 +1453,6 @@
         "width": "9",
         "collapse": false,
         "className": ""
-    },
-    {
-        "id": "563fac2488f91284",
-        "type": "sqliteQueuedDb",
-        "db": "/home/ji/Documents/vital_signs.db",
-        "mode": "RWC"
     },
     {
         "id": "bc27e4439f9f9b1c",
@@ -1496,6 +1524,18 @@
         "willMsg": {},
         "userProps": "",
         "sessionExpiry": ""
+    },
+    {
+        "id": "563fac2488f91284",
+        "type": "sqliteQueuedDb",
+        "db": "/home/ji_aiot_2022/Documents/vital_signs.db",
+        "mode": "RWC"
+    },
+    {
+        "id": "f4ecd786b14ff578",
+        "type": "sqlitedb",
+        "db": "/home/ji/Documents/vital_signs.db",
+        "mode": "RWC"
     },
     {
         "id": "1a08348d976afc3f",
